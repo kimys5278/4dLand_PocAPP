@@ -32,4 +32,6 @@ public class ResultController {
         return ResponseEntity.status(HttpStatus.OK).body(results);
 
     }
+
+
 }
