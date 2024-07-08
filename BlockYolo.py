@@ -11,12 +11,7 @@ import uuid
 import requests
 import os
 from dotenv import load_dotenv, find_dotenv
-<<<<<<< HEAD
-
-
-=======
 import urllib.parse
->>>>>>> 824dd7fdea089e509e1fe8685611d886321a6d68
 
 # key.env 파일 로드
 dotenv_path = find_dotenv('key.env')
@@ -86,22 +81,6 @@ async def predict_images(image_urls: List[str]):
 
         for url in image_urls:
             logger.info(f"Processing image from URL: {url}")
-<<<<<<< HEAD
-            response = requests.get(url)
-            if response.status_code != 200:
-                raise HTTPException(status_code=400, detail=f"Failed to download image from {url}")
-            image = Image.open(BytesIO(response.content))
-            logger.info(f"Image size: {image.size}")
-
-            # 이미지에 알파 채널이 있으면 RGB로 변환
-            if image.mode == 'RGBA':
-                image = image.convert('RGB')
-            
-            draw = ImageDraw.Draw(image)
-            font = ImageFont.truetype(font_path, 15)  # 폰트 크기를 15로 줄임
-        
-            # YOLO 모델로 이미지 처리
-=======
             decoded_url = urllib.parse.unquote(url)
             response = requests.get(decoded_url)
             if response.status_code != 200:
@@ -115,33 +94,12 @@ async def predict_images(image_urls: List[str]):
             draw = ImageDraw.Draw(image)
             font = ImageFont.truetype(font_path, 15)
 
->>>>>>> 824dd7fdea089e509e1fe8685611d886321a6d68
             results = model(np.array(image))[0]
             logger.info(f"Detection results: {results}")
 
             for box in results.boxes:
                 class_id = int(box.cls[0])
                 class_name, color = names[class_id]
-<<<<<<< HEAD
-                confidence = round(float(box.conf[0]) * 100, 2)  # 정확도를 100배로 증가
-                class_confidences[class_name].append(confidence)
-                detections[class_name] += 1
-
-                # 바운딩 박스 그리기
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                draw.rectangle([x1, y1, x2, y2], outline=color, width=3)
-                text = f"{class_name} {confidence}%"
-                # 텍스트 크기 계산
-                text_bbox = draw.textbbox((x1, y1), text, font=font)
-                text_width = text_bbox[2] - text_bbox[0] + 10  # 여유 공간 추가
-                text_height = text_bbox[3] - text_bbox[1] + 10 # 여유 공간 추가
-                # 텍스트 배경 박스 그리기
-                draw.rectangle([x1, y1 - text_height, x1 + text_width, y1], fill=color)
-                # 텍스트 그리기
-                draw.text((x1 + 5, y1 - text_height + 5), text, fill=(255, 255, 255), font=font)  # 여유 공간만큼 이동
-            
-            # 이미지 S3에 업로드
-=======
                 confidence = round(float(box.conf[0]) * 100, 2)
                 class_confidences[class_name].append(confidence)
                 detections[class_name] += 1
@@ -155,7 +113,6 @@ async def predict_images(image_urls: List[str]):
                 draw.rectangle([x1, y1 - text_height, x1 + text_width, y1], fill=color)
                 draw.text((x1 + 5, y1 - text_height + 5), text, fill=(255, 255, 255), font=font)
 
->>>>>>> 824dd7fdea089e509e1fe8685611d886321a6d68
             result_image_key = f"images/after_result/{uuid.uuid4()}.png"
             buffer = BytesIO()
             image.save(buffer, "PNG")
