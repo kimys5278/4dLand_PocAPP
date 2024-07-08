@@ -33,4 +33,4 @@ build/
 ### VS Code ###
 .vscode/
 # Ignore application.properties file
-fland/resource/application.properties
+fland/application.properties
